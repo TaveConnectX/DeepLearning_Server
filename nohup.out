@@ -1,0 +1,78 @@
+ * Debug mode: on
+Permission denied
+ * Debug mode: on
+Permission denied
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10004
+ * Running on http://167.99.106.139:10004
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 317-408-188
+14.52.206.93 - - [27/May/2023 12:44:16] "GET /api-docs HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:16] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:16] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:16] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:16] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:18] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:18] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 304 -
+14.52.206.93 - - [27/May/2023 12:44:18] "GET /swagger.json HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:42] "GET /api-docs HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:42] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:42] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:42] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:42] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:44] "GET /swagger.json HTTP/1.1" 200 -
+175.197.33.45 - - [27/May/2023 12:44:44] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:45] "GET /api-docs HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:45] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:45] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:45] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:45] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:45] "GET /api-docs HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /api-docs HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:46] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:47] "GET /api-docs HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:47] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:47] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:47] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:47] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:47] "GET /swagger.json HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:47] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:48] "GET /swagger.json HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:48] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:48] "GET /swaggerui/favicon-16x16.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:48] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:44:48] "GET /swagger.json HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:48] "GET /swagger.json HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:48] "GET /swaggerui/favicon-16x16.png HTTP/1.1" 200 -
+14.52.206.85 - - [27/May/2023 12:44:48] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:45:28] "POST /get_next_state/ HTTP/1.1" 200 -
+ * Detected change in '/home/m0nd2y/ConnectX_AI_server/app.py', reloading
+[[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 2, 0], [0, 1, 0, 0, 2, 1, 0], [0, 2, 0, 0, 1, 1, 0], [1, 2, 2, 2, 1, 1, 2], [1, 2, 2, 1, 1, 2, 1]]
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 317-408-188
+ * Detected change in '/home/m0nd2y/ConnectX_AI_server/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 317-408-188
+14.52.206.93 - - [27/May/2023 12:46:49] "GET /api-docs HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swaggerui/droid-sans.css HTTP/1.1" 304 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swaggerui/swagger-ui.css HTTP/1.1" 304 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 304 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 304 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swagger.json HTTP/1.1" 200 -
+14.52.206.93 - - [27/May/2023 12:46:50] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 304 -
+ * Detected change in '/home/m0nd2y/ConnectX_AI_server/app.py', reloading
+ * Restarting with stat
