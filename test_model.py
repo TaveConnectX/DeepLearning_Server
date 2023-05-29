@@ -6,6 +6,24 @@ import os
 import numpy as np
 from models import *
 
+
+"""
+사용법: python test_model.py ("model name")
+
+model 폴더: 사용할 수 있는 model 모음
+models.py: 모델의 구조를 알려주는 파일
+test_model.py: 모델을 테스트할 수 있는 코드, 해당 state를 모델에 넣으면 그에 맞는 action(column)을 return 
+
+유의점:
+1. 현재 모델의 이름엔 "Linear", 또는 "CNN"이 포함되어 있어야함. 
+일단 사용가능한 임시 모델들도 model이라는 폴더 만들어서 같이 push함
+2. main 함수 인자 "model_name"은 생략가능하며 생략시 DQNmodel_CNN.pth 로 동작
+3. 다른 state를 test하고 싶으면 main 함수 안의 2차원 list를 수정하면 됨 
+4. 디버깅하고 싶으면 중간에 "for debugging" 아래의 print 문을 주석해제하면 편하게 정보 볼 수 있음
+"""
+
+
+
 # 이 models dict와 models.py 는 딥러닝 repository와 동일하게 유지되어야 함 
 models = {
             1:CFLinear,
