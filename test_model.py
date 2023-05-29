@@ -94,18 +94,30 @@ def get_valid_actions(state):
     return valid_actions
 
 # 모델 load. 매개변수만 load 하는게 overload가 적다고 하여 이 방법을 선택하였음 
-def load_model(model, filename='DQNmodel_CNN'):
-    try:
-        if filename.endswith(".pth"):
+def load_model(model, device, filename='DQNmodel_CNN'):
+    print (device)
+    if filename.endswith(".pth"):
+        if device == torch.device('cpu') :
+            model.load_state_dict(torch.load("model/"+filename, map_location=device))
+        else :
             model.load_state_dict(torch.load("model/"+filename))
-        elif filename.endswith(".pt"):
+    elif filename.endswith(".pt"):
+        if device == torch.device('cpu') :
+            model.load_state_dict(torch.load("model/"+filename, map_location=device))
+        else :
             model.load_state_dict(torch.load("model/"+filename))
-        elif os.path.isfile("model/"+filename+".pth"):
-                model.load_state_dict(torch.load("model/"+filename+'.pth'))
-        elif  os.path.isfile("model/"+filename+".pt"):
-                model.load_state_dict(torch.load("model/"+filename+'.pt'))
-    except Exception as e:
-        print(f'모델 로드에서 예외가 발생했습니다: {e}')
+    elif os.path.isfile("model/"+filename+".pth"):
+        if device == torch.device('cpu') :
+            model.load_state_dict(torch.load("model/"+filename+'.pth', map_location=device))
+        else :
+            model.load_state_dict(torch.load("model/"+filename+'.pth'))
+    elif os.path.isfile("model/"+filename+".pt"):
+        if device == torch.device('cpu') :
+            model.load_state_dict(torch.load("model/"+filename+'.pt', map_location=device))
+        else :
+            model.load_state_dict(torch.load("model/"+filename+'.pt'))
+    #except Exception as e:
+    #    print(f'모델 로드에서 예외가 발생했습니다: {e}')
             
 
 # model 이름을 보고 어떤 type인지 확인 
@@ -132,6 +144,7 @@ def main():
 
     # gpu 사용 여부 확인
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
     
     # state 를 입력을 받음, 일단 test 용으로 2차원 배열 할당해놓음 
     # 1과 2로 이루어진 2차원 배열 
@@ -168,7 +181,7 @@ def main():
         # 알맞은 model 할당
         agent = models[model_num]().to(device)
         # 가중치 load
-        load_model(agent, model_name)
+        load_model(agent, device, model_name)
         # 모델에 forward
         qvalues = agent(state)
         # 가능한 q value 모음 
@@ -188,4 +201,4 @@ def main():
     return valid_actions[torch.argmax(valid_q_values)]
 
 if __name__ == "__main__":
-    main()
+    print(main())
