@@ -95,7 +95,6 @@ def get_valid_actions(state):
 
 # 모델 load. 매개변수만 load 하는게 overload가 적다고 하여 이 방법을 선택하였음 
 def load_model(model, device, filename='DQNmodel_CNN'):
-    print (device)
     if filename.endswith(".pth"):
         if device == torch.device('cpu') :
             model.load_state_dict(torch.load("model/"+filename, map_location=device))
@@ -129,35 +128,12 @@ def check_model_type(model_name):
     else: 
         raise nameError
     
-def main():
-
-    # 실행할 때 사용할 model의 이름을 적어줘야함
-    # ex) python test_model.py DQNmodel_Linear
-    argvs = sys.argv
-    if len(argvs) == 1:
-        model_name = 'DQNmodel_CNN'
-    else:
-        model_name = argvs[1]
-
+def test_main(state, model_name):
     # model type 확인
     model_type = check_model_type(model_name)
 
     # gpu 사용 여부 확인
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device)
-    
-    # state 를 입력을 받음, 일단 test 용으로 2차원 배열 할당해놓음 
-    # 1과 2로 이루어진 2차원 배열 
-
-    # 현재 1을 놓아야하는 상태
-    state = [
-        [0,0,0,2,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,0,2,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,2,2,0,0,0],
-        [0,0,1,1,1,2,0]
-    ]
 
     state = np.array(state)  # list to numpy array
 
@@ -201,4 +177,26 @@ def main():
     return valid_actions[torch.argmax(valid_q_values)]
 
 if __name__ == "__main__":
-    print(main())
+
+    # 실행할 때 사용할 model의 이름을 적어줘야함
+    # ex) python test_model.py DQNmodel_Linear
+    argvs = sys.argv
+    if len(argvs) == 1:
+        model_name = 'DQNmodel_CNN'
+    else:
+        model_name = argvs[1]
+
+    # state 를 입력을 받음, 일단 test 용으로 2차원 배열 할당해놓음 
+    # 1과 2로 이루어진 2차원 배열 
+
+    # 현재 1을 놓아야하는 상태
+    state = [
+        [0,0,0,2,0,0,0],
+        [0,0,0,1,0,0,0],
+        [0,0,0,2,0,0,0],
+        [0,0,0,1,0,0,0],
+        [0,0,2,2,0,0,0],
+        [0,0,1,1,1,2,0]
+    ]
+
+    print(test_main(state, model_name))

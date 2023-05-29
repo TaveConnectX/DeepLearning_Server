@@ -1,0 +1,130 @@
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10004
+ * Running on http://167.99.106.139:10004
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 143-295-625
+61.72.167.71 - - [29/May/2023 16:23:44] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:23:45] "POST /get_next_action/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 2213, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 2193, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 673, in error_router
+    return original_handler(f)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 671, in error_router
+    return self.handle_error(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 673, in error_router
+    return original_handler(f)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 671, in error_router
+    return self.handle_error(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 404, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/views.py", line 109, in view
+    return current_app.ensure_sync(self.dispatch_request)(**kwargs)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/resource.py", line 46, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "/home/m0nd2y/ConnectX_AI_server/app.py", line 31, in post
+    return (get_next_action_func(api.payload['list'])), 200
+  File "/home/m0nd2y/ConnectX_AI_server/app.py", line 20, in get_next_action_func
+    test_main(state_list, model_name)
+NameError: name 'test_main' is not defined
+61.72.167.71 - - [29/May/2023 16:24:02] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:02] "POST /get_next_action/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 2213, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 2193, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 673, in error_router
+    return original_handler(f)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 671, in error_router
+    return self.handle_error(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 673, in error_router
+    return original_handler(f)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 671, in error_router
+    return self.handle_error(e)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/api.py", line 404, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask/views.py", line 109, in view
+    return current_app.ensure_sync(self.dispatch_request)(**kwargs)
+  File "/home/m0nd2y/.local/lib/python3.8/site-packages/flask_restx/resource.py", line 46, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "/home/m0nd2y/ConnectX_AI_server/app.py", line 31, in post
+    return (get_next_action_func(api.payload['list'])), 200
+  File "/home/m0nd2y/ConnectX_AI_server/app.py", line 20, in get_next_action_func
+    test_main(state_list, model_name)
+NameError: name 'test_main' is not defined
+61.72.167.71 - - [29/May/2023 16:24:09] "GET /get_next_action/ HTTP/1.1" 405 -
+61.72.167.71 - - [29/May/2023 16:24:10] "GET /favicon.ico HTTP/1.1" 404 -
+ * Detected change in '/home/m0nd2y/ConnectX_AI_server/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 143-295-625
+61.72.167.71 - - [29/May/2023 16:24:39] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:40] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:44] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:45] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:45] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:46] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:48] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:49] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:50] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:51] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:51] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:54] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:55] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:56] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:58] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:58] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:24:59] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:00] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:01] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:03] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:03] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:05] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:08] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:09] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:09] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:10] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:11] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:12] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:13] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:14] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:17] "OPTIONS /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:17] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:18] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:19] "POST /get_next_action/ HTTP/1.1" 200 -
+61.72.167.71 - - [29/May/2023 16:25:22] "POST /get_next_action/ HTTP/1.1" 200 -
+ * Detected change in '/home/m0nd2y/ConnectX_AI_server/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 143-295-625

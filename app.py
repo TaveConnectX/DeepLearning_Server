@@ -5,6 +5,7 @@ import requests
 import json
 import threading
 import random
+import test_model
 
 
 app = Flask(__name__)
@@ -15,7 +16,8 @@ get_next_action_ns = api.namespace('get_next_action', description='다음 action
 
 def get_next_action_func(file_content):
     state_list = list(file_content)
-    print(state_list)
+    model_name = 'DQNmodel_CNN'
+    test_model.test_main(state_list, model_name)
     return random.randrange(0,7)
 
 Modelstate = get_next_action_ns.model('get_next_action', strict=True, model={
