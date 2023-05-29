@@ -1,12 +1,14 @@
 from flask import Flask, send_file
 from flask_restx import Api, Resource, reqparse, fields
+from flask_cors import CORS
 import requests
 import json
 import threading
 import random
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+CORS(app)
 api = Api(app, version='1.0', title='ConnectX 문서', description='ConnectX API 문서', doc="/api-docs")
 
 get_next_action_ns = api.namespace('get_next_action', description='다음 action 조회')
