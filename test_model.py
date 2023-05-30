@@ -95,28 +95,17 @@ def get_valid_actions(state):
 
 # 모델 load. 매개변수만 load 하는게 overload가 적다고 하여 이 방법을 선택하였음 
 def load_model(model, device, filename='DQNmodel_CNN'):
-    if filename.endswith(".pth"):
-        if device == torch.device('cpu') :
-            model.load_state_dict(torch.load("model/"+filename, map_location=device))
-        else :
-            model.load_state_dict(torch.load("model/"+filename))
-    elif filename.endswith(".pt"):
-        if device == torch.device('cpu') :
-            model.load_state_dict(torch.load("model/"+filename, map_location=device))
-        else :
-            model.load_state_dict(torch.load("model/"+filename))
+    model_path = ''
+    if filename.endswith(".pth") or filename.endswith(".pt"):
+        model_path = "model/"+filename
     elif os.path.isfile("model/"+filename+".pth"):
-        if device == torch.device('cpu') :
-            model.load_state_dict(torch.load("model/"+filename+'.pth', map_location=device))
-        else :
-            model.load_state_dict(torch.load("model/"+filename+'.pth'))
+        model_path = "model/"+filename+".pth"
     elif os.path.isfile("model/"+filename+".pt"):
-        if device == torch.device('cpu') :
-            model.load_state_dict(torch.load("model/"+filename+'.pt', map_location=device))
-        else :
-            model.load_state_dict(torch.load("model/"+filename+'.pt'))
-    #except Exception as e:
-    #    print(f'모델 로드에서 예외가 발생했습니다: {e}')
+        model_path = "model/"+filename+".pt"
+    try:    
+        model.load_state_dict(torch.load(model_path, map_location=device))
+    except Exception as e:
+        print(f'모델 로드에서 예외가 발생했습니다: {e}')
             
 
 # model 이름을 보고 어떤 type인지 확인 
@@ -134,7 +123,7 @@ def test_main(state, model_name):
 
     # gpu 사용 여부 확인
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    # device = torch.device("cpu")
     state = np.array(state)  # list to numpy array
 
     # 1p, 2p 확인
