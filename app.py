@@ -14,20 +14,21 @@ api = Api(app, version='1.0', title='ConnectX 문서', description='ConnectX API
 
 get_next_action_ns = api.namespace('get_next_action', description='다음 action 조회')
 
-def get_next_action_func(file_content):
-    state_list = list(file_content)
-    model_name = 'DQNmodel_CNN'
-    return test_model.test_main(state_list, model_name)
+def get_next_action_func(state, difficulty):
+    state_list = list(state)
+    result = int(test_model.test_main(state_list, difficulty))
+    return result
 
 Modelstate = get_next_action_ns.model('get_next_action', strict=True, model={
     'list': fields.List(fields.List(fields.Integer), title='현재 state', default=[[0,0,0,0,0,0,0], [0,0,0,0,0,2,0], [0,1,0,0,2,1,0], [0,2,0,0,1,1,0], [1,2,2,2,1,1,2], [1,2,2,1,1,2,1]], required=True),
+    'difficulty': fields.String(default="hard", description='difficulty', required=True),
 })
 
 @get_next_action_ns.route('/')
 class Test(Resource):
     @get_next_action_ns.expect(Modelstate)
     def post(self):
-        return (get_next_action_func(api.payload['list'])), 200
+            return get_next_action_func(api.payload['list'], api.payload['difficulty']), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

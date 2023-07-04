@@ -318,7 +318,6 @@ def test_main(state, difficulty):
     # print("maxQ:", torch.max(valid_q_values).item())
     # print("selected action:", valid_actions[torch.argmax(valid_q_values)])
 
-
     # 가장 높은 value를 가진 action return
     return action
 
