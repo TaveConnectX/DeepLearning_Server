@@ -4,8 +4,8 @@ import copy
 import sys
 import os
 import numpy as np
-from models import *
-
+from models import ResNetforDQN, AlphaZeroResNet, CFCNN, CFLinear
+from env import ConnectFour, Node, MCTS
 
 """
 사용법: python test_model.py ("model name")
@@ -24,14 +24,12 @@ test_model.py: 모델을 테스트할 수 있는 코드, 해당 state를 모델�
 
 
 
-# 이 models dict와 models.py 는 딥러닝 repository와 동일하게 유지되어야 함 
-models = {
-            1:CFLinear,
-            2:CFCNN,
-            3:HeuristicModel,
-        }
-
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model_class = {
+    'easy':CFCNN(),
+    'normal':ResNetforDQN(action_size=49),
+    'hard':AlphaZeroResNet(5,128)
+}
 # state가 정상적이지 않다면 error를 출력
 class stateError(Exception):
     def __str__(self):
@@ -72,7 +70,12 @@ def board_normalization(state, model_type, player):
 
     return arr
 
-
+def get_encoded_state(state):
+    encoded_state = np.stack(
+        (state == -1, state == 0, state == 1)
+    ).astype(np.float32)
+    
+    return encoded_state
 # 보드판을 보고 지금이 누구의 턴인지 확인(1p, 2p)
 def check_player(state):
     one = np.count_nonzero(state == 1)
@@ -116,13 +119,177 @@ def check_model_type(model_name):
         return 'CNN'
     else: 
         raise nameError
-    
-def test_main(state, model_name):
-    # model type 확인
-    model_type = check_model_type(model_name)
 
+
+# def get_model_info(difficulty):
+   
+#     folder_path = 'model/'
+#     folder_path = folder_path + difficulty + '/'
+#     file_names = os.listdir(folder_path)
+
+#     for file_name in file_names:
+#         print(file_name)
+#         if '.pt' in file_name:
+#             model_name = file_name
+#         elif '.json' in file_name:
+#             config_name = file_name
+
+
+#     return model_name, config_name
+
+def load_model(difficulty):
+    path = 'model/'+difficulty+'/'
+    file_names = os.listdir(path)
+
+    for file_name in file_names:
+        print(file_name)
+        if '.pt' in file_name:
+            model_name = file_name
+        elif '.json' in file_name:
+            config_name = file_name
+
+    model = model_class[difficulty]
+    try:    
+        model.load_state_dict(
+            torch.load(path+model_name, map_location=device)
+        )
+    except Exception as e:
+        print(f'모델 로드에서 예외가 발생했습니다: {e}')
+
+    return model
+
+
+
+
+def get_action(model, state, vas):
+
+    if isinstance(model, ResNetforDQN):
+        if model.action_size==49:
+            # 상황에 따라 다르게
+            return get_minimax_action(model, state, vas)
+            # return get_nash_action(model, state,vas)
+        elif model.action_size==7:
+            return get_DQN_action(model, state, vas)
+    elif isinstance(model, AlphaZeroResNet):
+        return get_alphazero_action(model, state, vas)
+    elif isinstance(model, CFCNN) or isinstance(model, CFLinear):
+        return get_DQN_action(model, state, vas)
+    else: 
+        print('error')
+        exit()
+
+
+def get_DQN_action(model, state, vas):
+    q_values = model(state)
+    print(q_values)
+    valid_q_values = q_values.squeeze()[torch.tensor(vas)]
+    return vas[torch.argmax(valid_q_values)]
+
+def get_minimax_action(model, state, valid_actions):
+
+    q_values = model(state)[0]
+    # print(q_values.reshape(7,7))
+    q_dict = {}
+    # print(valid_actions)
+    # print(distinct_actions)
+    for a in valid_actions:
+        q_dict[a] = []
+        for b in valid_actions:
+            idx = 7*a + b
+            # print(a,b)
+            # print(q_value[idx])
+            # print(q_dict[a][1])
+            
+            q_dict[a].append((b, -q_values[idx]))
+
+        q_dict[a] = torch.tensor(q_dict[a])
+        op_action, value = q_dict[a][q_dict[a].argmax(dim=0)[1]]
+        # op_action, value = softmax_policy(torch.tensor(q_dict[a]), temp=temp)
+        # if torch.isnan(value):
+        #     print(a,b)
+        #     print(q_value.reshape(7,7))
+        #     print(q_dict)
+        q_dict[a] = (op_action, -1 * value)
+
+    qs_my_turn = [[key, value[1]] for key, value in q_dict.items()]
+    qs_my_turn = torch.tensor(qs_my_turn)
+    action, value = qs_my_turn[qs_my_turn.argmax(dim=0)[1]]
+        
+    action = int(action)
+    
+    # action, value = softmax_policy(torch.tensor(qs_my_turn), temp=temp)
+    # if torch.isnan(value):
+    #         print(a,b)
+    #         print(q_value.reshape(7,7))
+    #         print(q_dict)
+
+    return action
+
+
+def get_nash_action(model,state, vas):
+    q_values = model(state)
+
+    pa, pb, v = get_nash_prob_and_value(q_values, vas)
+    print(pa, pb, v)
+    return np.random.choice(vas, p=pa)
+
+
+def get_nash_prob_and_value(payoff_matrix, vas, iterations=100):
+    if isinstance(payoff_matrix, torch.Tensor):    
+        payoff_matrix = payoff_matrix.clone().detach().reshape(7,7)
+    elif isinstance(payoff_matrix, np.ndarray):
+        payoff_matrix = payoff_matrix.reshape(7,7)
+
+    payoff_matrix = payoff_matrix[vas][:,vas]
+    
+    '''Return the oddments (mixed strategy ratios) for a given payoff matrix'''
+    transpose_payoff = torch.transpose(payoff_matrix,0,1)
+    row_cum_payoff = torch.zeros(len(payoff_matrix)).to(device)
+    col_cum_payoff = torch.zeros(len(transpose_payoff)).to(device)
+
+    col_count = np.zeros(len(transpose_payoff))
+    row_count = np.zeros(len(payoff_matrix))
+    active = 0
+    for i in range(iterations):
+        row_count[active] += 1 
+        col_cum_payoff += payoff_matrix[active]
+        active = torch.argmin(col_cum_payoff)
+        col_count[active] += 1 
+        row_cum_payoff += transpose_payoff[active]
+        active = torch.argmax(row_cum_payoff)
+        
+    value_of_game = (max(row_cum_payoff) + min(col_cum_payoff)) / 2.0 / iterations  
+    row_prob = row_count / iterations
+    col_prob = col_count / iterations
+    
+    return row_prob, col_prob, value_of_game
+
+
+def get_alphazero_action(model, state, vas):
+    args = {
+        'C': 1,
+        'num_searches': 800,
+        'dirichlet_epsilon': 0.,
+        'dirichlet_alpha': 0.3
+    }
+    CF = ConnectFour()
+    mcts = MCTS(CF, args, model)
+    mcts_probs = mcts.search(state.squeeze().cpu().numpy())
+    action = np.random.choice(range(7),p=mcts_probs)
+    print(mcts_probs)
+    return action
+
+def test_main(state):
+    # model type 확인
+
+
+    # 난이도 설정
+    difficulty = 'hard'
+    # model_name, config_name = get_model_info(difficulty=difficulty)
+
+    # print(model_name, config_name)
     # gpu 사용 여부 확인
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
     # device = torch.device("cpu")
     state = np.array(state)  # list to numpy array
 
@@ -131,26 +298,19 @@ def test_main(state, model_name):
 
     # env가 없으므로 valid action이 뭔지 따로 확인
     valid_actions = get_valid_actions(state)
-
+    # print("valid_actions:",valid_actions)
     # gradient 계산을 하지 않음
     with torch.no_grad():
 
-        state = board_normalization(state, model_type, player).to(device)
+        state = board_normalization(state, 'CNN', player).to(device)
         
-
-        # 모델 로드
-        if model_type == "Linear": model_num = 1
-        elif model_type == "CNN" : model_num = 2
-        else: raise typeError
-
         # 알맞은 model 할당
-        agent = models[model_num]().to(device)
+        model = load_model(difficulty).to(device)
+        # print(model)
         # 가중치 load
-        load_model(agent, device, model_name)
         # 모델에 forward
-        qvalues = agent(state)
-        # 가능한 q value 모음 
-        valid_q_values = qvalues.squeeze()[torch.tensor(valid_actions)]
+        action = get_action(model, state, valid_actions)
+        print("a:",action)
 
     # for debugging
     # print("model name:", model_name)
@@ -163,17 +323,17 @@ def test_main(state, model_name):
 
 
     # 가장 높은 value를 가진 action return
-    return valid_actions[torch.argmax(valid_q_values)]
+    return action
 
 if __name__ == "__main__":
 
     # 실행할 때 사용할 model의 이름을 적어줘야함
     # ex) python test_model.py DQNmodel_Linear
-    argvs = sys.argv
-    if len(argvs) == 1:
-        model_name = 'DQNmodel_CNN'
-    else:
-        model_name = argvs[1]
+    # argvs = sys.argv
+    # if len(argvs) == 1:
+    #     model_name = 'DQNmodel_CNN'
+    # else:
+    #     model_name = argvs[1]
 
     # state 를 입력을 받음, 일단 test 용으로 2차원 배열 할당해놓음 
     # 1과 2로 이루어진 2차원 배열 
@@ -188,4 +348,4 @@ if __name__ == "__main__":
         [0,0,1,1,1,2,0]
     ]
 
-    print(test_main(state, model_name))
+    print(test_main(state))
