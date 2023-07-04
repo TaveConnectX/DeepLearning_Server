@@ -142,7 +142,7 @@ def load_model(difficulty):
     file_names = os.listdir(path)
 
     for file_name in file_names:
-        print(file_name)
+        # print(file_name)
         if '.pt' in file_name:
             model_name = file_name
         elif '.json' in file_name:
@@ -181,7 +181,7 @@ def get_action(model, state, vas):
 
 def get_DQN_action(model, state, vas):
     q_values = model(state)
-    print(q_values)
+    # print(q_values)
     valid_q_values = q_values.squeeze()[torch.tensor(vas)]
     return vas[torch.argmax(valid_q_values)]
 
@@ -276,15 +276,12 @@ def get_alphazero_action(model, state, vas):
     mcts = MCTS(CF, args, model)
     mcts_probs = mcts.search(state.squeeze().cpu().numpy())
     action = np.random.choice(range(7),p=mcts_probs)
-    print(mcts_probs)
+    # print(mcts_probs)
     return action
 
-def test_main(state):
+def test_main(state, difficulty):
     # model type 확인
 
-
-    # 난이도 설정
-    difficulty = 'hard'
     # model_name, config_name = get_model_info(difficulty=difficulty)
 
     # print(model_name, config_name)
@@ -310,7 +307,7 @@ def test_main(state):
         # 가중치 load
         # 모델에 forward
         action = get_action(model, state, valid_actions)
-        print("a:",action)
+        # print("a:",action)
 
     # for debugging
     # print("model name:", model_name)
@@ -324,6 +321,7 @@ def test_main(state):
 
     # 가장 높은 value를 가진 action return
     return action
+
 
 if __name__ == "__main__":
 
@@ -348,4 +346,7 @@ if __name__ == "__main__":
         [0,0,1,1,1,2,0]
     ]
 
-    print(test_main(state))
+
+    # test_main의 인자는 state와 난이도로 이루어짐
+    # 난이도는 'easy', 'normal', 'hard'
+    print(test_main(state, 'hard'))
