@@ -268,7 +268,7 @@ def get_nash_prob_and_value(payoff_matrix, vas, iterations=100):
 def get_alphazero_action(model, state, vas):
     args = {
         'C': 1,
-        'num_searches': 800,
+        'num_searches': 100,
         'dirichlet_epsilon': 0.,
         'dirichlet_alpha': 0.3
     }
