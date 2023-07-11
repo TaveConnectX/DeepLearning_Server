@@ -4,8 +4,8 @@ import copy
 import sys
 import os
 import numpy as np
-from models import ResNetforDQN, AlphaZeroResNet, CFCNN, CFLinear
-from env import ConnectFour, Node, MCTS
+from models import ResNetforDQN, AlphaZeroResNet, CFCNN, CFLinear, Classifier
+from env import ConnectFour, Node, MCTS, Node_alphago, MCTS_alphago
 
 """
 사용법: python test_model.py ("model name")
@@ -26,9 +26,9 @@ test_model.py: 모델을 테스트할 수 있는 코드, 해당 state를 모델�
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_class = {
-    'easy':CFCNN(),
-    'normal':ResNetforDQN(action_size=49),
-    'hard':AlphaZeroResNet(5,128)
+    'easy':ResNetforDQN(action_size=49),  # Minimax DDQN with selfplay
+    'normal':ResNetforDQN(action_size=49),  # AlphaGO with Minimax DDQN
+    'hard':AlphaZeroResNet(3,5,128)  # AlphaZero
 }
 # state가 정상적이지 않다면 error를 출력
 class stateError(Exception):
@@ -97,18 +97,18 @@ def get_valid_actions(state):
     return valid_actions
 
 # 모델 load. 매개변수만 load 하는게 overload가 적다고 하여 이 방법을 선택하였음 
-def load_model(model, device, filename='DQNmodel_CNN'):
-    model_path = ''
-    if filename.endswith(".pth") or filename.endswith(".pt"):
-        model_path = "model/"+filename
-    elif os.path.isfile("model/"+filename+".pth"):
-        model_path = "model/"+filename+".pth"
-    elif os.path.isfile("model/"+filename+".pt"):
-        model_path = "model/"+filename+".pt"
-    try:    
-        model.load_state_dict(torch.load(model_path, map_location=device))
-    except Exception as e:
-        print(f'모델 로드에서 예외가 발생했습니다: {e}')
+# def load_model(model, device, filename='DQNmodel_CNN'):
+#     model_path = ''
+#     if filename.endswith(".pth") or filename.endswith(".pt"):
+#         model_path = "model/"+filename
+#     elif os.path.isfile("model/"+filename+".pth"):
+#         model_path = "model/"+filename+".pth"
+#     elif os.path.isfile("model/"+filename+".pt"):
+#         model_path = "model/"+filename+".pt"
+#     try:    
+#         model.load_state_dict(torch.load(model_path, map_location=device))
+#     except Exception as e:
+#         print(f'모델 로드에서 예외가 발생했습니다: {e}')
             
 
 # model 이름을 보고 어떤 type인지 확인 
@@ -141,6 +141,33 @@ def load_model(difficulty):
     path = 'model/'+difficulty+'/'
     file_names = os.listdir(path)
 
+    model = model_class[difficulty]
+
+    if difficulty=='normal':
+        for file_name in file_names:
+            # print(file_name)
+            if 'Value' in file_name:
+                value_model_name = file_name
+            elif '.pt' in file_name:
+                model_name = file_name
+
+        value_model = Classifier()
+
+        try:    
+            model.load_state_dict(
+                torch.load(path+model_name, map_location=device)
+            )
+            value_model.load_state_dict(
+                torch.load(path+value_model_name, map_location=device)
+            )
+        except Exception as e:
+            print(f'모델 로드에서 예외가 발생했습니다: {e}')
+
+        return (model, value_model)
+
+        
+
+        
     for file_name in file_names:
         # print(file_name)
         if '.pt' in file_name:
@@ -148,7 +175,7 @@ def load_model(difficulty):
         elif '.json' in file_name:
             config_name = file_name
 
-    model = model_class[difficulty]
+    
     try:    
         model.load_state_dict(
             torch.load(path+model_name, map_location=device)
@@ -161,12 +188,20 @@ def load_model(difficulty):
 
 
 
-def get_action(model, state, vas):
+def get_action(model, state, difficulty, vas):
 
+    if isinstance(model, tuple):
+        value_model = model[1].to(device)
+        model = model[0]
+
+    model.to(device)
     if isinstance(model, ResNetforDQN):
         if model.action_size==49:
             # 상황에 따라 다르게
-            return get_minimax_action(model, state, vas)
+            if difficulty=='normal':
+                return get_alphago_action(model, value_model, state, vas)
+            else:
+                return get_minimax_action(model, state, vas)
             # return get_nash_action(model, state,vas)
         elif model.action_size==7:
             return get_DQN_action(model, state, vas)
@@ -187,7 +222,9 @@ def get_DQN_action(model, state, vas):
 
 def get_minimax_action(model, state, valid_actions):
 
-    q_values = model(state)[0]
+    q_values = model(
+        torch.tensor(get_encoded_state(state.squeeze().cpu())).unsqueeze(0).to(device)
+    )[0]
     # print(q_values.reshape(7,7))
     q_dict = {}
     # print(valid_actions)
@@ -275,9 +312,28 @@ def get_alphazero_action(model, state, vas):
     CF = ConnectFour()
     mcts = MCTS(CF, args, model)
     mcts_probs = mcts.search(state.squeeze().cpu().numpy())
-    action = np.random.choice(range(7),p=mcts_probs)
+    # action = np.random.choice(range(7),p=mcts_probs)
+    action = np.argmax(mcts_probs)
     # print(mcts_probs)
     return action
+
+def get_alphago_action(model, value_model, state, vas):
+    args = {
+        'C': 1.5,
+        'num_searches': 200,
+        'dirichlet_epsilon': 0.,
+        'dirichlet_alpha': 0.3
+    }
+
+    CF = ConnectFour()
+    mcts = MCTS_alphago(CF, args, model, value_model)
+    mcts_probs = mcts.search(state.squeeze().cpu().numpy())
+    # action = np.random.choice(range(7),p=mcts_probs)
+    action = np.argmax(mcts_probs)
+    # print(mcts_probs)
+    return action
+
+
 
 def test_main(state, difficulty):
     # model type 확인
@@ -301,12 +357,14 @@ def test_main(state, difficulty):
 
         state = board_normalization(state, 'CNN', player).to(device)
         
+        # alphago는 따로 적용 
+        
         # 알맞은 model 할당
-        model = load_model(difficulty).to(device)
+        model = load_model(difficulty)
         # print(model)
         # 가중치 load
         # 모델에 forward
-        action = get_action(model, state, valid_actions)
+        action = get_action(model, state, difficulty, valid_actions)
         # print("a:",action)
 
     # for debugging
