@@ -192,9 +192,11 @@ def get_action(model, state, difficulty, vas):
 
     if isinstance(model, tuple):
         value_model = model[1].to(device)
+        value_model.eval()
         model = model[0]
 
     model.to(device)
+    model.eval()
     if isinstance(model, ResNetforDQN):
         if model.action_size==49:
             # 상황에 따라 다르게
@@ -314,7 +316,8 @@ def get_alphazero_action(model, state, vas):
     mcts_probs = mcts.search(state.squeeze().cpu().numpy())
     # action = np.random.choice(range(7),p=mcts_probs)
     action = np.argmax(mcts_probs)
-    # print(mcts_probs)
+    print(mcts_probs)
+    
     return action
 
 def get_alphago_action(model, value_model, state, vas):
@@ -395,12 +398,12 @@ if __name__ == "__main__":
 
     # 현재 1을 놓아야하는 상태
     state = [
+        [0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0],
         [0,0,0,2,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,0,2,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,2,2,0,0,0],
-        [0,0,1,1,1,2,0]
+        [0,0,0,1,1,0,0]
     ]
 
 
